@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
 
 # 5. Create the app.py file directly inside the container
 # (This ensures the container has the code it needs)
-RUN echo 'from flask import Flask\napp = Flask(__name__)\n@app.route("/")\ndef status(): return {"vessel": "Ever Given", "status": "Docked"}\nif __name__ == "__main__": app.run(host="0.0.0.0", port=5000, threaded=False)' > app.py
+RUN echo 'from flask import Flask\napp = Flask(__name__)\n@app.route("/")\ndef status(): return {"vessel": "Sinar Surabaya", "status": "Docked"}\nif __name__ == "__main__": app.run(host="0.0.0.0", port=5000, threaded=False)' > app.py
 
 # 6. Open port 5000
 EXPOSE 5000
