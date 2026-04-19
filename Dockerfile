@@ -9,7 +9,7 @@ WORKDIR /app
 RUN echo "flask==3.0.0" > requirements.txt
 
 # 4. Install the library
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
 
 # 5. Create the app.py file directly inside the container
 # (This ensures the container has the code it needs)
