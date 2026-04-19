@@ -1,5 +1,5 @@
-# 1. Use a lightweight Python base (Good for security)
-FROM python:3.9-slim
+# 1. Use a lightweight Python base (Good for security) --> use alpine for better security
+FROM python:3.12-alpine
 
 # 2. Set the 'home' directory inside the container
 WORKDIR /app
