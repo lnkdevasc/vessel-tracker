@@ -19,6 +19,15 @@ pipeline {
             }
         }
 
+        stage('Step 2.5: Security Scan') {
+            steps {
+                echo 'Scanning the image for vulnerabilities...'
+                // This runs Trivy against the image we just built
+                // --exit-code 1 means "Fail the build if you find a HIGH or CRITICAL vulnerability"
+                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --exit-code 1 --severity HIGH,CRITICAL vessel-tracker:v1'
+            }
+        }
+
         stage('Step 3: Deploy') {
             steps {
                 echo 'Starting the new Vessel Tracker container...'
