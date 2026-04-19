@@ -1,22 +1,25 @@
-# 1. Use a lightweight Python base (Good for security) --> use alpine for better security
+# Use the ultra-secure, small Alpine base
 FROM python:3.12-alpine
 
-# 2. Set the 'home' directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# 3. Create a requirements file directly inside the container
-# (We are doing this to keep it simple for now)
+# Install system dependencies needed for some Python packages
+# (Alpine is so small it doesn't even come with 'gcc' or 'musl-dev' by default)
+RUN apk add --no-cache gcc musl-dev linux-headers
+
+# Create requirements
 RUN echo "flask==3.0.0" > requirements.txt
 
-# 4. Install the library
+# Install Python packages with progress bar off
 RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
 
-# 5. Create the app.py file directly inside the container
-# (This ensures the container has the code it needs)
-RUN echo 'from flask import Flask\napp = Flask(__name__)\n@app.route("/")\ndef status(): return {"vessel": "Ever Given", "status": "Docked"}\nif __name__ == "__main__": app.run(host="0.0.0.0", port=5000, threaded=False)' > app.py
+# Create the app.py with the single-threaded fix
+RUN echo 'from flask import Flask\napp = Flask(__name__)\n@app.route("/")\ndef status(): return {"vessel": "Surabaya Express", "status": "Underway"}\nif __name__ == "__main__": app.run(host="0.0.0.0", port=5000, threaded=False)' > app.py
 
-# 6. Open port 5000
+# Expose the port
 EXPOSE 5000
 
-# 7. Start the app
+# Run using the production-style command if you want, 
+# but for now let's keep it simple to verify the scan
 CMD ["python", "app.py"]
