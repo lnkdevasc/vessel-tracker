@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  # Our Flask App (The Ship)
+  vessel-web:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - vessel-db
+    networks:
+      - port-network
+
+  # Our Redis Database (The Logbook)
+  vessel-db:
+    image: redis:alpine
+    networks:
+      - port-network
+
+networks:
+  port-network:
+    driver: bridge

@@ -28,11 +28,13 @@ pipeline {
             }
         }
 
-        stage('Step 3: Deploy') {
+        stage('Step 3: Deploy (Fleet Mode)') {
             steps {
-                echo 'Starting the new Vessel Tracker container...'
-                // This starts the app on port 5000
-                sh 'docker run -d -p 5000:5000 --name port-app vessel-tracker:v1'
+                echo 'Launching the Port Infrastructure...'
+                // -f specifies the file, up -d starts everything in background
+                // --build ensures it uses our freshly built image from Step 2
+                sh 'docker-compose down' // Clean up old fleet first
+                sh 'docker-compose up -d --build'
             }
         }
     }

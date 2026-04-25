@@ -9,7 +9,8 @@ WORKDIR /app
 RUN apk add --no-cache gcc musl-dev linux-headers
 
 # Create requirements
-RUN echo "flask==3.0.0" > requirements.txt
+RUN echo "flask==3.0.0" > requirements.txt && \
+    echo "redis==5.0.1" >> requirements.txt
 
 # Install Python packages with progress bar off
 RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
