@@ -97,37 +97,6 @@
         
         .stat-card-main .card-value { font-size: 4rem; color: #fff; text-shadow: 0 0 15px rgba(108, 92, 231, 0.4); }
 
-        /* --- Log Tab (Clean Terminal) --- */
-        .logs-section {
-            background-color: var(--bg-card);
-            border-radius: var(--radius);
-            border: 1px solid var(--border-soft);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .logs-header {
-            padding: 15px 25px;
-            border-bottom: 1px solid var(--border-soft);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #161b3d;
-        }
-        
-        .logs-header h3 { margin: 0; font-size: 1rem; color: var(--text-muted); }
-
-        .log-list {
-            padding: 20px;
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-            font-size: 0.8rem;
-            color: var(--accent-teal);
-            height: 180px;
-            overflow-y: scroll;
-        }
-        .log-entry { margin-bottom: 6px; }
-        .log-entry .timestamp { color: var(--text-muted); margin-right: 10px; }
-
         /* --- Simple Button --- */
         .btn-refresh {
             background-color: var(--accent-teal);
@@ -198,35 +167,6 @@
                 <div style="font-size: 0.9rem; color: var(--accent-teal);">SYNCED WITH REDIS</div>
             </div>
         </div>
-
-        <div class="logs-section">
-            <div class="logs-header">
-                <h3>Vessel Command Logs</h3>
-                <div style="font-size: 0.7rem; color: var(--accent-teal);">SYSTEM_INFO</div>
-            </div>
-            <div class="log-list" id="log-box">
-                <div class="log-entry">> Monitoring pipeline initialized...</div>
-            </div>
-        </div>
     </div>
-
-    <script>
-        function fetchLogs() {
-            fetch('/logs')
-                .then(response => response.json())
-                .then(data => {
-                    const logBox = document.getElementById('log-box');
-                    logBox.innerHTML = '';
-                    data.forEach(line => {
-                        const div = document.createElement('div');
-                        div.className = 'log-entry';
-                        const timeSpan = '<span class="timestamp">[SYSTEM]</span>';
-                        div.innerHTML = '> ' + timeSpan + line;
-                        logBox.appendChild(div);
-                    });
-                });
-        }
-        setInterval(fetchLogs, 3000);
-    </script>
 </body>
 </html>
