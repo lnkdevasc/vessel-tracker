@@ -4,6 +4,8 @@ services:
   # Our Flask App (The Ship)
   vessel-web:
     build: .
+    environment:
+      - DB_PASSWORD_FOR_PYTHON=${DB_PASS} # Passes it from the shell to Python
     ports:
       - "5000:5000"
     depends_on:
@@ -14,6 +16,7 @@ services:
   # Our Redis Database (The Logbook)
   vessel-db:
     image: redis:alpine
+    command: redis-server --requirepass ${DB_PASS}
     networks:
       - port-network
 

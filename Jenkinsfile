@@ -1,16 +1,5 @@
 pipeline {
-    agent any 
-
-    stages {
-        stage('Step 1: Cleanup') {
-            steps {
-                echo 'Removing old versions of the Vessel Tracker...'
-                // This stops the app if it is already running so we can update it
-                sh 'docker stop port-app || true'
-                sh 'docker rm port-app || true'
-            }
-        }
-
+    agent any {
         stage('Step 2: Build') {
             steps {
                 echo 'Building the Docker Image from our Dockerfile...'
@@ -28,13 +17,17 @@ pipeline {
             }
         }
 
-        stage('Step 3: Deploy (Fleet Mode)') {
+        stage('Step 3: Deploy') {
+            environment {
+                // This pulls the secret from Jenkins' encrypted database
+                DB_PASS_FOR_BUILD = credentials('REDIS_PWD') 
+            }
             steps {
                 echo 'Launching the Port Infrastructure...'
                 // -f specifies the file, up -d starts everything in background
                 // --build ensures it uses our freshly built image from Step 2
-                sh 'docker-compose down' // Clean up old fleet first
-                sh 'docker-compose up -d --build'
+                sh 'docker-compose down || true'
+                sh 'DB_PASS=${DB_PASS_FOR_BUILD} docker-compose up -d --build'
             }
         }
     }
