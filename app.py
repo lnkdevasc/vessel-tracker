@@ -8,29 +8,32 @@ app = Flask(__name__)
 r = redis.Redis(
     host='vessel-db', 
     port=6379, 
-    password=os.getenv("DB_PASSWORD_FOR_PYTHON"), 
+    password=os.getenv("DB_PASSWORD"), 
     decode_responses=True
 )
 
 @app.route('/')
 def index():
-    # Increment the counter in Redis
+    # Increment and get the count
     hits = r.incr('hits')
     
-    # Vessel Data (The stuff you want to "pop")
-    vessel_info = {
+    # We pass more complex 'telemetry' data to the template
+    # These values will map to our static design
+    vessel_data = {
         "ship_name": "Surabaya Express",
         "status": "Active",
         "location": "Madura Strait",
-        "destination": "Port of Tanjung Perak"
+        # Telemetry to match the reference look
+        "cpu_telemetry": 32.8,
+        "mem_telemetry": 58.9,
+        "disk_telemetry": 52
     }
     
-    return render_template('index.html', vessel=vessel_info, count=hits)
+    return render_template('index.html', vessel=vessel_data, count=hits)
 
-# A route for that "Refresh" button
 @app.route('/refresh')
 def refresh():
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=5000)
