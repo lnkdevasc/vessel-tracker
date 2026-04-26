@@ -14,7 +14,9 @@ services:
   # Our Redis Database (The Logbook)
   vessel-db:
     image: redis:alpine
-    command: redis-server --requirepass ${DB_PASS}
+    command: redis-server --requirepass ${DB_PASS} --appendonly yes
+    volumes:
+      - ./redis_data:/data  # This is the "Anchor"
     networks:
       - port-network
   
