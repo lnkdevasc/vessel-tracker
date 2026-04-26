@@ -194,7 +194,7 @@
         <div class="content">
             <div class="header">
                 <h2 style="margin:0;">System Overview: <span style="color:var(--accent-cyan)">{{ vessel.ship_name }}</span></h2>
-                <div style="font-size: 0.8rem; color: #555;">ID: ITS-{{ vessel.location|upper }}-2026</div>
+                <div style="font-size: 0.8rem; color: #555;">ID: {{vessel.status|upper}}-{{ vessel.location|upper }}-2026</div>
             </div>
 
             <div class="gauge-card">
