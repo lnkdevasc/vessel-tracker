@@ -1,5 +1,7 @@
 pipeline {
-    agent any {
+    agent any
+
+    stages {
         stage('Step 2: Build') {
             steps {
                 echo 'Building the Docker Image from our Dockerfile...'
