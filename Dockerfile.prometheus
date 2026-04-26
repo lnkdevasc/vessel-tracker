@@ -1,2 +1,6 @@
 FROM prom/prometheus
 COPY prometheus.yml /etc/prometheus/prometheus.yml
+# The base image already has a CMD, but let's be explicit if it's failing
+ENTRYPOINT [ "/bin/prometheus" ]
+CMD [ "--config.file=/etc/prometheus/prometheus.yml", \
+      "--storage.tsdb.path=/prometheus" ]
