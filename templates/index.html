@@ -1,31 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Vessel Tracker Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Surabaya Express - Command Center</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #16213e; padding: 2rem; border-radius: 15px; border: 1px solid #0f3460; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 350px; }
-        .vessel-id { font-size: 0.8rem; color: #e94560; font-weight: bold; text-transform: uppercase; margin-bottom: 0.5rem; }
-        h1 { margin: 0 0 1.5rem 0; color: #4ecca3; }
-        .stats { background: #0f3460; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; }
-        .counter { font-size: 2rem; font-weight: bold; color: #e94560; }
-        .btn { background: #e94560; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background: #ff2e63; transform: scale(1.05); }
+        :root {
+            --bg-color: #0b0b1a;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-pink: #ff007f;
+            --accent-cyan: #00f2ff;
+            --accent-purple: #7000ff;
+            --text-main: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 20% 30%, #1a1a3a 0%, #0b0b1a 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Main Dashboard Container */
+        .dashboard {
+            width: 950px;
+            height: 650px;
+            background: rgba(16, 16, 32, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 40px 20px;
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .user-profile {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--accent-purple), var(--accent-pink));
+            margin: 0 auto 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #888;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .nav-item.active {
+            background: var(--glass-bg);
+            color: var(--accent-cyan);
+            border-left: 4px solid var(--accent-cyan);
+        }
+
+        /* Main Content Area */
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto 180px 1fr;
+            gap: 25px;
+        }
+
+        .header {
+            grid-column: span 3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Circular Gauges (CSS only) */
+        .gauge-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-progress {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-cyan) var(--percentage), #222 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .circle-progress::after {
+            content: attr(data-value);
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: #111;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        /* Redis Visit Counter Widget */
+        .main-stat-card {
+            grid-column: span 3;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.1) 0%, rgba(255, 0, 127, 0.1) 100%);
+            border: 1px solid var(--accent-pink);
+            border-radius: 25px;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .counter-label { font-size: 1.1rem; color: #aaa; }
+        .counter-number { font-size: 4rem; font-weight: bold; color: #fff; text-shadow: 0 0 20px var(--accent-pink); }
+
+        .btn-refresh {
+            background: var(--accent-cyan);
+            color: #000;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.6);
+            background: #fff;
+        }
+
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="vessel-id">Maritime Asset Tracking</div>
-        <h1>{{ vessel.ship_name }}</h1>
-        <p><strong>Status:</strong> {{ vessel.status }}</p>
-        <p><strong>Location:</strong> {{ vessel.location }}</p>
-        
-        <div class="stats">
-            <div>Total Visits</div>
-            <div class="counter">{{ count }}</div>
+
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="user-profile">
+                <div class="avatar-circle">M</div>
+                <div style="font-weight: bold;">Muhammad Fawwaz</div>
+                <div style="font-size: 0.7rem; color: #00f2ff;">Lead DevSecOps</div>
+            </div>
+            <div class="nav-item active">OVERVIEW</div>
+            <div class="nav-item">VESSEL LOGS</div>
+            <div class="nav-item">SECURITY SCAN</div>
+            <div class="nav-item">SETTINGS</div>
         </div>
-        
-        <a href="/refresh" class="btn">Update Tracker</a>
+
+        <div class="content">
+            <div class="header">
+                <h2 style="margin:0;">System Overview: <span style="color:var(--accent-cyan)">{{ vessel.ship_name }}</span></h2>
+                <div style="font-size: 0.8rem; color: #555;">ID: ITS-{{ vessel.location|upper }}-2026</div>
+            </div>
+
+            <div class="gauge-card">
+                <div class="circle-progress" style="--percentage: {{ vessel.cpu_telemetry }}%" data-value="{{ vessel.cpu_telemetry }}%"></div>
+                <div class="counter-label">CPU LOAD</div>
+            </div>
+
+            <div class="gauge-card">
+                <div class="circle-progress" style="--percentage: {{ vessel.mem_telemetry }}%; background: conic-gradient(var(--accent-purple) var(--percentage), #222 0);" data-value="{{ vessel.mem_telemetry }}%"></div>
+                <div class="counter-label">MEMORY</div>
+            </div>
+
+            <div class="gauge-card">
+                <div class="circle-progress" style="--percentage: {{ vessel.disk_telemetry }}%; background: conic-gradient(var(--accent-pink) var(--percentage), #222 0);" data-value="{{ vessel.disk_telemetry }}%"></div>
+                <div class="counter-label">DISK OPS</div>
+            </div>
+
+            <div class="main-stat-card">
+                <div>
+                    <div class="counter-label">SECURE PIPELINE ACCESS</div>
+                    <div style="color: var(--accent-cyan); font-size: 0.9rem;">Status: Synchronized with Redis</div>
+                </div>
+                <div class="counter-number">{{ count }}</div>
+                <a href="/refresh" class="btn-refresh">RELOAD DATA</a>
+            </div>
+        </div>
     </div>
+
 </body>
 </html>
