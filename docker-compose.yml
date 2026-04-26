@@ -23,7 +23,7 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
-      - ${PWD}/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - port-network
     ports:
