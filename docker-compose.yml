@@ -36,7 +36,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana_data:/var/lib/grafana  # The Anchor
+      - ./grafana_data:/var/lib/grafana
     networks:
       - port-network
     depends_on:
