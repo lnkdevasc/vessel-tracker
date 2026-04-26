@@ -8,7 +8,7 @@ app = Flask(__name__)
 r = redis.Redis(
     host='vessel-db', 
     port=6379, 
-    password=os.getenv("DB_PASSWORD"), 
+    password=os.getenv("DB_PASSWORD_FOR_PYTHON"), 
     decode_responses=True
 )
 
