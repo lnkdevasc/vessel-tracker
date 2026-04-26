@@ -21,9 +21,9 @@ services:
   # --- THE OBSERVERS ---
   
   prometheus:
-    image: prom/prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    build:
+      context: .
+      dockerfile: Dockerfile.prometheus
     networks:
       - port-network
     ports:
