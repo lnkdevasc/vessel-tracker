@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vessel Tracker Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #16213e; padding: 2rem; border-radius: 15px; border: 1px solid #0f3460; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; width: 350px; }
+        .vessel-id { font-size: 0.8rem; color: #e94560; font-weight: bold; text-transform: uppercase; margin-bottom: 0.5rem; }
+        h1 { margin: 0 0 1.5rem 0; color: #4ecca3; }
+        .stats { background: #0f3460; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; }
+        .counter { font-size: 2rem; font-weight: bold; color: #e94560; }
+        .btn { background: #e94560; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #ff2e63; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="vessel-id">Maritime Asset Tracking</div>
+        <h1>{{ vessel.ship_name }}</h1>
+        <p><strong>Status:</strong> {{ vessel.status }}</p>
+        <p><strong>Location:</strong> {{ vessel.location }}</p>
+        
+        <div class="stats">
+            <div>Total Visits</div>
+            <div class="counter">{{ count }}</div>
+        </div>
+        
+        <a href="/refresh" class="btn">Update Tracker</a>
+    </div>
+</body>
+</html>

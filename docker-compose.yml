@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Our Flask App (The Ship)
   vessel-web:

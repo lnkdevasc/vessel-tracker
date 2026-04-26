@@ -16,7 +16,7 @@ RUN echo "flask==3.0.0" > requirements.txt && \
 RUN pip install --no-cache-dir --progress-bar off -r requirements.txt
 
 # Create the app.py with the single-threaded fix
-COPY app.py .
+COPY . /app
 
 # Expose the port
 EXPOSE 5000
