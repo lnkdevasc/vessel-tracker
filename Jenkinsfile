@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Step 2: Build') {
+        stage('Step 1: Build') {
             steps {
                 echo 'Building the Docker Image from our Dockerfile...'
                 // This command tells Docker to follow the "recipe" we wrote
@@ -10,7 +10,7 @@ pipeline {
             }
         }
 
-        stage('Step 2.5: Security Scan') {
+        stage('Step 2: Security Scan') {
             steps {
                 echo 'Scanning the image for vulnerabilities...'
                 // This runs Trivy against the image we just built
